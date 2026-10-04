@@ -28,43 +28,6 @@ Technical High School student in **Industrial Automation at IFBA**, focused on s
 - C, C++, Python and JavaScript
 - Competitive programming and algorithmic problem solving
 
-## Featured projects
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-### 🔐 [Phishpect](https://github.com/Rafael-lima-devbr/Phishpect)
-
-Experimental Microsoft Edge extension for phishing detection using local heuristics and reputation data, with versioned evaluation datasets and reproducible experiments.
-
-</td>
-<td width="50%" valign="top">
-
-### 🤖 [Line-Following Robot](https://github.com/Rafael-lima-devbr/line-follower-robot-raspberrypi)
-
-Python robotics project exploring PID line following, differential-drive odometry, sensor-based navigation and autonomous movement.
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### 🛡️ [DevSecOps Task Manager](https://github.com/Rafael-lima-devbr/devsecops-task-manager-flask)
-
-Academic DevSecOps project applying CI/CD, Docker, automated testing, security analysis and observability to a Flask application.
-
-</td>
-<td width="50%" valign="top">
-
-### 📡 [Sensors & Modules](https://github.com/Rafael-lima-devbr/sensors_modules)
-
-Arduino and Wokwi experiments focused on sensors, filtering, measurement and state analysis.
-
-</td>
-</tr>
-</table>
-
 ## Areas of interest
 
 ### Robotics
@@ -79,17 +42,17 @@ My current interests include secure software development, CI/CD security, vulner
 
 I keep programming exercises, contest solutions and learning experiments organized in [`study-code`](https://github.com/Rafael-lima-devbr/study-code), mainly using C, C++ and Python.
 
-## Connect with me
+## Contact
 
 <div align="center">
   <a href="mailto:rafaelima1250@gmail.com">
-    <img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+    <img src="https://img.shields.io/badge/Email-rafaelima1250%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email Rafael Lima" />
   </a>
   <a href="https://www.linkedin.com/in/rafael-lima-ribeiro-dos-santos-89b3423a1">
-    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+    <img src="https://img.shields.io/badge/LinkedIn-Rafael%20Lima-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Rafael Lima" />
   </a>
   <a href="https://discord.com/users/722159213341704282">
-    <img src="https://img.shields.io/badge/Discord-kiritohigu9075-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord: kiritohigu9075" />
+    <img src="https://img.shields.io/badge/Discord-kiritohigu9075-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord kiritohigu9075" />
   </a>
 </div>
 
