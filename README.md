@@ -1,6 +1,6 @@
 <div align="center">
 
-# Rafael Lima
+# Rafael Lima Ribeiro dos Santos
 
 ### Software • Cybersecurity • Robotics • DevSecOps
 
@@ -78,6 +78,18 @@ My current interests include secure software development, CI/CD security, vulner
 ### Study & algorithms
 
 I keep programming exercises, contest solutions and learning experiments organized in [`study-code`](https://github.com/Rafael-lima-devbr/study-code), mainly using C, C++ and Python.
+
+## Connect with me
+
+<div align="center">
+  <a href="mailto:rafaelima1250@gmail.com">
+    <img src="https://img.shields.io/badge/Email-Contact-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" />
+  </a>
+  <a href="https://www.linkedin.com/in/rafael-lima-ribeiro-dos-santos-89b3423a1">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
+  </a>
+  <img src="https://img.shields.io/badge/Discord-kiritohigu9075-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord: kiritohigu9075" />
+</div>
 
 ## GitHub activity
 
