@@ -88,7 +88,9 @@ I keep programming exercises, contest solutions and learning experiments organiz
   <a href="https://www.linkedin.com/in/rafael-lima-ribeiro-dos-santos-89b3423a1">
     <img src="https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" />
   </a>
-  <img src="https://img.shields.io/badge/Discord-kiritohigu9075-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord: kiritohigu9075" />
+  <a href="https://discord.com/users/722159213341704282">
+    <img src="https://img.shields.io/badge/Discord-kiritohigu9075-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord: kiritohigu9075" />
+  </a>
 </div>
 
 ## GitHub activity
