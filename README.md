@@ -58,7 +58,7 @@ I keep programming exercises, contest solutions and learning experiments organiz
 
 <div align="center">
   <img height="165" src="https://github-readme-stats.vercel.app/api?username=Rafael-lima-devbr&show_icons=true&hide_border=true&theme=github_dark" alt="GitHub stats" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Rafael-lima-devbr&layout=compact&hide_border=true&theme=github_dark" alt="Most used languages" />
+  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Rafael-lima-devbr&layout=compact&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark" alt="Most used languages" />
 </div>
 
 <div align="center">
