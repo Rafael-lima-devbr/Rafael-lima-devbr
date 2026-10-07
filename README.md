@@ -51,11 +51,23 @@ I keep programming exercises, contest solutions and study code organized in [`st
 <p align="center"><code>// tools I use across software, security and robotics</code></p>
 
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=c,cpp,python,java,js,git,github,linux,docker,arduino,raspberrypi&theme=dark&perline=11">
-    <img src="https://skillicons.dev/icons?i=c,cpp,python,java,js,git,github,linux,docker,arduino,raspberrypi&theme=light&perline=11" alt="C, C++, Python, Java, JavaScript, Git, GitHub, Linux, Docker, Arduino and Raspberry Pi" />
-  </picture>
+  <img src="https://skillicons.dev/icons?i=c&theme=dark" height="48" alt="C" />
+  <img src="https://skillicons.dev/icons?i=cpp&theme=dark" height="48" alt="C++" />
+  <img src="https://skillicons.dev/icons?i=python&theme=dark" height="48" alt="Python" />
+  <img src="https://skillicons.dev/icons?i=java&theme=dark" height="48" alt="Java" />
+  <img src="https://skillicons.dev/icons?i=js&theme=dark" height="48" alt="JavaScript" />
+  <img src="https://skillicons.dev/icons?i=git&theme=dark" height="48" alt="Git" />
+  <img src="https://skillicons.dev/icons?i=github&theme=dark" height="48" alt="GitHub" />
+  <img src="https://skillicons.dev/icons?i=githubactions&theme=dark" height="48" alt="GitHub Actions" />
+  <img src="https://skillicons.dev/icons?i=docker&theme=dark" height="48" alt="Docker" />
+  <img src="https://skillicons.dev/icons?i=linux&theme=dark" height="48" alt="Linux" />
+  <img src="https://skillicons.dev/icons?i=arduino&theme=dark" height="48" alt="Arduino" />
+  <img src="https://skillicons.dev/icons?i=raspberrypi&theme=dark" height="48" alt="Raspberry Pi" />
+  <img src="https://skillicons.dev/icons?i=vscode&theme=dark" height="48" alt="Visual Studio Code" />
+  <img src="https://skillicons.dev/icons?i=androidstudio&theme=dark" height="48" alt="Android Studio" />
 </div>
+
+<p align="center"><sub>C · C++ · Python · Java · JavaScript · Git · GitHub · GitHub Actions · Docker · Linux · Arduino · Raspberry Pi · VS Code · Android Studio</sub></p>
 
 <p align="center"><code>build → test → measure → improve</code></p>
 
