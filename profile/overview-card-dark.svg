@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 165" width="300" height="165" role="img" aria-label="GitHub overview">
+  <rect x="0.5" y="0.5" width="299" height="164" rx="8" fill="#0d1117" stroke="#30363d"/>
+  <text x="20" y="28" fill="#58a6ff" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="16" font-weight="700">GitHub Overview</text>
+  <text x="20" y="62" fill="#8b949e" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Contributions · year</text>
+  <text x="278" y="62" text-anchor="end" fill="#f0f6fc" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">351</text>
+  <text x="20" y="88" fill="#8b949e" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Pull requests</text>
+  <text x="278" y="88" text-anchor="end" fill="#f0f6fc" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">3</text>
+  <text x="20" y="114" fill="#8b949e" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Issues</text>
+  <text x="278" y="114" text-anchor="end" fill="#f0f6fc" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">5</text>
+  <text x="20" y="140" fill="#8b949e" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Stars</text>
+  <text x="278" y="140" text-anchor="end" fill="#f0f6fc" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">0</text>
+</svg>
