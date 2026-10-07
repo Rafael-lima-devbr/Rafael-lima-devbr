@@ -4,37 +4,50 @@
 
 ### Software Development · Cybersecurity · Robotics · DevSecOps
 
-Technical High School student in **Industrial Automation at IFBA**, interested in building software, security and robotics projects that can be tested, measured and improved.
+Technical High School student in **Industrial Automation at IFBA**, building projects across software security, autonomous systems, CI/CD and algorithms.
 
 <sub>Estudante do Ensino Médio Técnico em <strong>Automação Industrial no IFBA</strong>, com foco em desenvolvimento de software, cibersegurança, robótica e DevSecOps.</sub>
 
 </div>
 
+```text
+rafael@github:~$ whoami
+software + security + robotics
+
+rafael@github:~$ focus --current
+phishing-detection | devsecops | ftc-robotics | algorithms
+
+rafael@github:~$ mindset
+build -> test -> measure -> improve
+```
+
 ---
 
-## About me
+## `~/about`
 
-- I build projects involving **software security, phishing detection and secure development**.
-- I work with **robotics and autonomous systems**, including line following, PID/PD control, odometry and sensor integration.
-- I study and apply **DevSecOps**, with Docker, GitHub Actions, automated testing, SAST/DAST and observability.
-- I use **C, C++, Python, Java and JavaScript** across academic, robotics and programming projects.
-- I am part of the **FTC programming area at IFBA**, working with the FTC SDK, Java, Git collaboration, Autonomous and TeleOp.
+I like projects where software interacts with something measurable: a security signal, a robot, a pipeline, a sensor or an algorithmic constraint.
 
-## Areas of focus
+- **Software security** — phishing detection, browser security, application security and secure development.
+- **Robotics** — line following, PID/PD control, odometry, sensor integration and autonomous navigation.
+- **DevSecOps** — CI/CD, Docker, automated tests, SAST/DAST, monitoring and secure pipelines.
+- **Programming** — C, C++, Python, Java and JavaScript across academic, robotics and competitive-programming projects.
+- **FTC** — programming with the FTC SDK, Java, Git collaboration, Autonomous and TeleOp at IFBA.
+
+## `~/focus`
 
 **Cybersecurity & Software Security**  
-Browser security, phishing detection, application security and secure software development. Main research-oriented project: [`Phishpect`](https://github.com/Rafael-lima-devbr/Phishpect).
+My main research-oriented project is [`Phishpect`](https://github.com/Rafael-lima-devbr/Phishpect), an experimental browser-extension project focused on preventive phishing detection.
 
 **Robotics & Autonomous Systems**  
 Arduino and Raspberry Pi projects involving line following, control, odometry, sensors and autonomous navigation.
 
 **DevSecOps**  
-CI/CD, containerization, automated testing, security analysis and monitoring. See [`devsecops-task-manager-flask`](https://github.com/Rafael-lima-devbr/devsecops-task-manager-flask).
+CI/CD, containerization, automated testing, security analysis and observability in [`devsecops-task-manager-flask`](https://github.com/Rafael-lima-devbr/devsecops-task-manager-flask).
 
 **Algorithms & Programming**  
 Programming exercises, contest solutions and study code organized in [`study-code`](https://github.com/Rafael-lima-devbr/study-code).
 
-## Core stack
+## `~/stack`
 
 <div align="center">
 
@@ -42,21 +55,21 @@ Programming exercises, contest solutions and study code organized in [`study-cod
 
 </div>
 
-## GitHub activity
+## `~/github --live`
 
 <p align="center">
-  <sub>Automatically refreshed every day by GitHub Actions. The cards are generated from GitHub data, validated and stored inside this repository before they are shown here.</sub>
+  <sub>These cards are rendered directly from GitHub data every <strong>6 hours</strong> and stored in this repository. The date of the latest dataset appears inside the cards.</sub>
 </p>
 
 <div align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./profile/overview-card-dark.svg">
-    <img src="./profile/overview-card-light.svg" width="300" alt="GitHub overview with yearly contributions, pull requests, issues and stars">
+    <img src="./profile/overview-card-light.svg" width="300" alt="Live GitHub overview with yearly contributions, pull requests, issues and stars">
   </picture>
   &nbsp;
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="./profile/top-langs-dark.svg">
-    <img src="./profile/top-langs-light.svg" width="300" alt="Most used programming languages on public repositories">
+    <img src="./profile/top-langs-light.svg" width="300" alt="Most used programming languages across public repositories">
   </picture>
 </div>
 
@@ -69,23 +82,23 @@ Programming exercises, contest solutions and study code organized in [`study-cod
   </picture>
 </div>
 
-<p align="center"><sub>Jupyter Notebook is excluded from the language card so generated notebook content does not dominate the source-code breakdown.</sub></p>
+<p align="center"><sub>Jupyter Notebook is intentionally excluded from the language breakdown so notebook metadata does not dominate the source-code profile.</sub></p>
 
 <details>
-<summary><strong>Contribution history</strong></summary>
+<summary><strong>▸ Contribution map — past year</strong></summary>
 
 <br/>
 
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./profile/signal-field-wide-dark.svg">
-    <img src="./profile/signal-field-wide-light.svg" width="640" alt="GitHub contribution history and activity summary for the past year">
+    <source media="(prefers-color-scheme: dark)" srcset="./profile/contribution-grid-dark.svg">
+    <img src="./profile/contribution-grid-light.svg" width="640" alt="GitHub contribution map for the past year">
   </picture>
 </div>
 
 </details>
 
-## Connect with me
+## `~/contact`
 
 <div align="center">
 
@@ -101,12 +114,8 @@ Programming exercises, contest solutions and study code organized in [`study-cod
 
 </div>
 
-<p align="center">
-  <sub>Profile metrics automation: <a href=".github/workflows/profile-stats.yml">profile-stats.yml</a></sub>
-</p>
-
 ---
 
 <div align="center">
-  <sub>Building across software, security and robotics.</sub>
+  <code>while (curious) { build(); test(); improve(); }</code>
 </div>
