@@ -33,7 +33,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Generate GitHub overview
+      - name: Generate GitHub overview source
         id: overview
         uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
         with:
@@ -41,7 +41,7 @@ jobs:
           token: ${{ github.token }}
           profile: signal-field
 
-      - name: Generate contribution consistency
+      - name: Generate contribution consistency source
         id: consistency
         uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
         with:
@@ -70,18 +70,105 @@ jobs:
           token: ${{ github.token }}
           fail_on_error: true
 
-      - name: Stage generated cards
+      - name: Build repository-local overview and streak cards
         env:
           OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
           CONSISTENCY_DIR: ${{ steps.consistency.outputs.ready-dir }}
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          overview_source = Path(os.environ['OVERVIEW_DIR']) / 'signal-field-wide-light.svg'
+          consistency_source = Path(os.environ['CONSISTENCY_DIR']) / 'activity-consistency-wide-light.svg'
+
+          overview_text = overview_source.read_text(encoding='utf-8')
+          consistency_text = consistency_source.read_text(encoding='utf-8')
+
+          overview_match = re.search(
+              r'(\d+) contributions in the past year; (\d+) stars; (\d+) authored public pull requests.*?; (\d+) authored public issues',
+              overview_text,
+              re.S,
+          )
+          consistency_match = re.search(
+              r'(\d+) active days out of \d+; (\d+)-day current streak; (\d+)-day longest streak; (\d+) contributions',
+              consistency_text,
+          )
+
+          if not overview_match:
+              raise SystemExit('Could not parse overview metrics from generated SVG')
+          if not consistency_match:
+              raise SystemExit('Could not parse streak metrics from generated SVG')
+
+          contributions, stars, prs, issues = overview_match.groups()
+          active_days, current_streak, longest_streak, streak_contributions = consistency_match.groups()
+
+          if contributions != streak_contributions:
+              raise SystemExit('Contribution totals disagree between generated sources')
+
+          def overview_card(theme: str) -> str:
+              dark = theme == 'dark'
+              bg = '#0d1117' if dark else '#ffffff'
+              border = '#30363d' if dark else '#d0d7de'
+              title = '#58a6ff' if dark else '#0969da'
+              text = '#f0f6fc' if dark else '#24292f'
+              muted = '#8b949e' if dark else '#57606a'
+              return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 165" width="300" height="165" role="img" aria-label="GitHub overview">
+          <rect x="0.5" y="0.5" width="299" height="164" rx="8" fill="{bg}" stroke="{border}"/>
+          <text x="20" y="28" fill="{title}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="16" font-weight="700">GitHub Overview</text>
+          <text x="20" y="62" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Contributions · year</text>
+          <text x="278" y="62" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{contributions}</text>
+          <text x="20" y="88" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Pull requests</text>
+          <text x="278" y="88" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{prs}</text>
+          <text x="20" y="114" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Issues</text>
+          <text x="278" y="114" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{issues}</text>
+          <text x="20" y="140" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Stars</text>
+          <text x="278" y="140" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{stars}</text>
+          </svg>'''
+
+          def streak_card(theme: str) -> str:
+              dark = theme == 'dark'
+              bg = '#0d1117' if dark else '#ffffff'
+              border = '#30363d' if dark else '#d0d7de'
+              accent = '#58a6ff' if dark else '#0969da'
+              text = '#f0f6fc' if dark else '#24292f'
+              muted = '#8b949e' if dark else '#57606a'
+              divider = '#30363d' if dark else '#d8dee4'
+              return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 150" width="640" height="150" role="img" aria-label="GitHub streak and contribution summary">
+          <rect x="0.5" y="0.5" width="639" height="149" rx="10" fill="{bg}" stroke="{border}"/>
+          <text x="24" y="27" fill="{muted}" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="11" font-weight="700">GITHUB ACTIVITY · LIVE</text>
+          <line x1="213" y1="48" x2="213" y2="124" stroke="{divider}"/>
+          <line x1="426" y1="48" x2="426" y2="124" stroke="{divider}"/>
+          <text x="106" y="87" text-anchor="middle" fill="{accent}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{current_streak}</text>
+          <text x="106" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">CURRENT STREAK</text>
+          <text x="320" y="87" text-anchor="middle" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{longest_streak}</text>
+          <text x="320" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">LONGEST STREAK</text>
+          <text x="533" y="87" text-anchor="middle" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{contributions}</text>
+          <text x="533" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">CONTRIBUTIONS · YEAR</text>
+          <text x="616" y="135" text-anchor="end" fill="{muted}" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="8">{active_days} active days · updated daily</text>
+          </svg>'''
+
+          profile = Path('profile')
+          profile.mkdir(exist_ok=True)
+          (profile / 'overview-card-light.svg').write_text(overview_card('light'), encoding='utf-8')
+          (profile / 'overview-card-dark.svg').write_text(overview_card('dark'), encoding='utf-8')
+          (profile / 'streak-card-light.svg').write_text(streak_card('light'), encoding='utf-8')
+          (profile / 'streak-card-dark.svg').write_text(streak_card('dark'), encoding='utf-8')
+          PY
+
+      - name: Stage generated cards
+        env:
+          OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
+        run: |
+          set -euo pipefail
 
           cp "$OVERVIEW_DIR"/signal-field-wide-light.svg profile/
           cp "$OVERVIEW_DIR"/signal-field-wide-dark.svg profile/
-          cp "$CONSISTENCY_DIR"/activity-consistency-wide-light.svg profile/
-          cp "$CONSISTENCY_DIR"/activity-consistency-wide-dark.svg profile/
 
+          rm -f profile/activity-consistency-wide-light.svg
+          rm -f profile/activity-consistency-wide-dark.svg
           rm -f profile/language-composition-wide-light.svg
           rm -f profile/language-composition-wide-dark.svg
 
@@ -91,8 +178,10 @@ jobs:
           files=(
             profile/signal-field-wide-light.svg
             profile/signal-field-wide-dark.svg
-            profile/activity-consistency-wide-light.svg
-            profile/activity-consistency-wide-dark.svg
+            profile/overview-card-light.svg
+            profile/overview-card-dark.svg
+            profile/streak-card-light.svg
+            profile/streak-card-dark.svg
             profile/top-langs-light.svg
             profile/top-langs-dark.svg
           )
@@ -100,7 +189,11 @@ jobs:
           for file in "${files[@]}"; do
             test -s "$file"
             grep -q '<svg' "$file"
+            ! grep -q 'NaN' "$file"
           done
+
+          grep -q 'CURRENT STREAK' profile/streak-card-light.svg
+          grep -q 'GitHub Overview' profile/overview-card-light.svg
 
       - name: Publish refreshed metrics
         if: github.event_name != 'pull_request'
