@@ -49,29 +49,41 @@ jobs:
           token: ${{ github.token }}
           profile: activity-consistency
 
-      - name: Generate language composition
-        id: languages
-        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
+      - name: Prepare output directory
+        run: mkdir -p profile
+
+      - name: Generate top languages (light)
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
         with:
-          username: ${{ github.repository_owner }}
+          card: top-langs
+          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=default
+          path: profile/top-langs-light.svg
           token: ${{ github.token }}
-          profile: language-composition
+          fail_on_error: true
+
+      - name: Generate top languages (dark)
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
+        with:
+          card: top-langs
+          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark
+          path: profile/top-langs-dark.svg
+          token: ${{ github.token }}
+          fail_on_error: true
 
       - name: Stage generated cards
         env:
           OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
           CONSISTENCY_DIR: ${{ steps.consistency.outputs.ready-dir }}
-          LANGUAGES_DIR: ${{ steps.languages.outputs.ready-dir }}
         run: |
           set -euo pipefail
-          mkdir -p profile
 
           cp "$OVERVIEW_DIR"/signal-field-wide-light.svg profile/
           cp "$OVERVIEW_DIR"/signal-field-wide-dark.svg profile/
           cp "$CONSISTENCY_DIR"/activity-consistency-wide-light.svg profile/
           cp "$CONSISTENCY_DIR"/activity-consistency-wide-dark.svg profile/
-          cp "$LANGUAGES_DIR"/language-composition-wide-light.svg profile/
-          cp "$LANGUAGES_DIR"/language-composition-wide-dark.svg profile/
+
+          rm -f profile/language-composition-wide-light.svg
+          rm -f profile/language-composition-wide-dark.svg
 
       - name: Validate generated cards
         run: |
@@ -81,8 +93,8 @@ jobs:
             profile/signal-field-wide-dark.svg
             profile/activity-consistency-wide-light.svg
             profile/activity-consistency-wide-dark.svg
-            profile/language-composition-wide-light.svg
-            profile/language-composition-wide-dark.svg
+            profile/top-langs-light.svg
+            profile/top-langs-dark.svg
           )
 
           for file in "${files[@]}"; do
@@ -94,7 +106,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: |
           set -euo pipefail
-          git add profile/*.svg
+          git add -A profile
 
           if git diff --cached --quiet; then
             echo 'Profile metrics are already up to date.'
