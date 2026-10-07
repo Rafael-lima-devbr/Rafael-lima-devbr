@@ -1,21 +1,22 @@
-# Pull requests generate and validate every profile card; publication only happens after merge.
 name: Refresh profile metrics
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 6 * * *'
+    - cron: '17 */6 * * *'
   push:
     branches:
       - main
     paths:
       - '.github/workflows/profile-stats.yml'
+      - '.github/scripts/render_profile.py'
       - 'README.md'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/profile-stats.yml'
+      - '.github/scripts/render_profile.py'
       - 'README.md'
 
 permissions:
@@ -23,191 +24,69 @@ permissions:
 
 concurrency:
   group: profile-metrics-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  generate:
+  render:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
-      - name: Check out repository
+      - name: Check out source branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Generate GitHub overview source
-        id: overview
-        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
         with:
-          username: ${{ github.repository_owner }}
-          token: ${{ github.token }}
-          profile: signal-field
+          ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Generate contribution consistency source
-        id: consistency
-        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
-        with:
-          username: ${{ github.repository_owner }}
-          token: ${{ github.token }}
-          profile: activity-consistency
-
-      - name: Prepare output directory
-        run: mkdir -p profile
-
-      - name: Generate top languages (light)
-        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=default
-          path: profile/top-langs-light.svg
-          token: ${{ github.token }}
-          fail_on_error: true
-
-      - name: Generate top languages (dark)
-        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark
-          path: profile/top-langs-dark.svg
-          token: ${{ github.token }}
-          fail_on_error: true
-
-      - name: Build repository-local overview and streak cards
+      - name: Render cards from GitHub API
         env:
-          OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
-          CONSISTENCY_DIR: ${{ steps.consistency.outputs.ready-dir }}
+          GH_TOKEN: ${{ github.token }}
+          PROFILE_USER: ${{ github.repository_owner }}
+        run: python3 .github/scripts/render_profile.py
+
+      - name: Validate generated SVGs
         run: |
           set -euo pipefail
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-          import os
-          import re
+          import xml.etree.ElementTree as ET
 
-          overview_source = Path(os.environ['OVERVIEW_DIR']) / 'signal-field-wide-light.svg'
-          consistency_source = Path(os.environ['CONSISTENCY_DIR']) / 'activity-consistency-wide-light.svg'
+          expected = [
+              'overview-card-light.svg',
+              'overview-card-dark.svg',
+              'streak-card-light.svg',
+              'streak-card-dark.svg',
+              'top-langs-light.svg',
+              'top-langs-dark.svg',
+              'contribution-grid-light.svg',
+              'contribution-grid-dark.svg',
+          ]
 
-          overview_text = overview_source.read_text(encoding='utf-8')
-          consistency_text = consistency_source.read_text(encoding='utf-8')
+          for name in expected:
+              path = Path('profile') / name
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise SystemExit(f'Missing or empty card: {path}')
+              text = path.read_text(encoding='utf-8')
+              if 'NaN' in text or 'undefined' in text:
+                  raise SystemExit(f'Invalid value in {path}')
+              ET.parse(path)
 
-          overview_match = re.search(
-              r'(\d+) contributions in the past year; (\d+) stars; (\d+) authored public pull requests.*?; (\d+) authored public issues',
-              overview_text,
-              re.S,
-          )
-          consistency_match = re.search(
-              r'(\d+) active days out of \d+; (\d+)-day current streak; (\d+)-day longest streak; (\d+) contributions',
-              consistency_text,
-          )
-
-          if not overview_match:
-              raise SystemExit('Could not parse overview metrics from generated SVG')
-          if not consistency_match:
-              raise SystemExit('Could not parse streak metrics from generated SVG')
-
-          contributions, stars, prs, issues = overview_match.groups()
-          active_days, current_streak, longest_streak, streak_contributions = consistency_match.groups()
-
-          if contributions != streak_contributions:
-              raise SystemExit('Contribution totals disagree between generated sources')
-
-          def overview_card(theme: str) -> str:
-              dark = theme == 'dark'
-              bg = '#0d1117' if dark else '#ffffff'
-              border = '#30363d' if dark else '#d0d7de'
-              title = '#58a6ff' if dark else '#0969da'
-              text = '#f0f6fc' if dark else '#24292f'
-              muted = '#8b949e' if dark else '#57606a'
-              return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 165" width="300" height="165" role="img" aria-label="GitHub overview">
-          <rect x="0.5" y="0.5" width="299" height="164" rx="8" fill="{bg}" stroke="{border}"/>
-          <text x="20" y="28" fill="{title}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="16" font-weight="700">GitHub Overview</text>
-          <text x="20" y="62" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Contributions · year</text>
-          <text x="278" y="62" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{contributions}</text>
-          <text x="20" y="88" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Pull requests</text>
-          <text x="278" y="88" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{prs}</text>
-          <text x="20" y="114" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Issues</text>
-          <text x="278" y="114" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{issues}</text>
-          <text x="20" y="140" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="12">Stars</text>
-          <text x="278" y="140" text-anchor="end" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="14" font-weight="700">{stars}</text>
-          </svg>'''
-
-          def streak_card(theme: str) -> str:
-              dark = theme == 'dark'
-              bg = '#0d1117' if dark else '#ffffff'
-              border = '#30363d' if dark else '#d0d7de'
-              accent = '#58a6ff' if dark else '#0969da'
-              text = '#f0f6fc' if dark else '#24292f'
-              muted = '#8b949e' if dark else '#57606a'
-              divider = '#30363d' if dark else '#d8dee4'
-              return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 150" width="640" height="150" role="img" aria-label="GitHub streak and contribution summary">
-          <rect x="0.5" y="0.5" width="639" height="149" rx="10" fill="{bg}" stroke="{border}"/>
-          <text x="24" y="27" fill="{muted}" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="11" font-weight="700">GITHUB ACTIVITY · LIVE</text>
-          <line x1="213" y1="48" x2="213" y2="124" stroke="{divider}"/>
-          <line x1="426" y1="48" x2="426" y2="124" stroke="{divider}"/>
-          <text x="106" y="87" text-anchor="middle" fill="{accent}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{current_streak}</text>
-          <text x="106" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">CURRENT STREAK</text>
-          <text x="320" y="87" text-anchor="middle" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{longest_streak}</text>
-          <text x="320" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">LONGEST STREAK</text>
-          <text x="533" y="87" text-anchor="middle" fill="{text}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="38" font-weight="700">{contributions}</text>
-          <text x="533" y="110" text-anchor="middle" fill="{muted}" font-family="system-ui,-apple-system,Segoe UI,sans-serif" font-size="11" font-weight="600">CONTRIBUTIONS · YEAR</text>
-          <text x="616" y="135" text-anchor="end" fill="{muted}" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="8">{active_days} active days · updated daily</text>
-          </svg>'''
-
-          profile = Path('profile')
-          profile.mkdir(exist_ok=True)
-          (profile / 'overview-card-light.svg').write_text(overview_card('light'), encoding='utf-8')
-          (profile / 'overview-card-dark.svg').write_text(overview_card('dark'), encoding='utf-8')
-          (profile / 'streak-card-light.svg').write_text(streak_card('light'), encoding='utf-8')
-          (profile / 'streak-card-dark.svg').write_text(streak_card('dark'), encoding='utf-8')
+          print('All profile SVGs are valid.')
           PY
 
-      - name: Stage generated cards
+      - name: Publish refreshed cards
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         env:
-          OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
-        run: |
-          set -euo pipefail
-
-          cp "$OVERVIEW_DIR"/signal-field-wide-light.svg profile/
-          cp "$OVERVIEW_DIR"/signal-field-wide-dark.svg profile/
-
-          rm -f profile/activity-consistency-wide-light.svg
-          rm -f profile/activity-consistency-wide-dark.svg
-          rm -f profile/language-composition-wide-light.svg
-          rm -f profile/language-composition-wide-dark.svg
-
-      - name: Validate generated cards
-        run: |
-          set -euo pipefail
-          files=(
-            profile/signal-field-wide-light.svg
-            profile/signal-field-wide-dark.svg
-            profile/overview-card-light.svg
-            profile/overview-card-dark.svg
-            profile/streak-card-light.svg
-            profile/streak-card-dark.svg
-            profile/top-langs-light.svg
-            profile/top-langs-dark.svg
-          )
-
-          for file in "${files[@]}"; do
-            test -s "$file"
-            grep -q '<svg' "$file"
-            ! grep -q 'NaN' "$file"
-          done
-
-          grep -q 'CURRENT STREAK' profile/streak-card-light.svg
-          grep -q 'GitHub Overview' profile/overview-card-light.svg
-
-      - name: Publish refreshed metrics
-        if: github.event_name != 'pull_request'
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           set -euo pipefail
           git add -A profile
 
           if git diff --cached --quiet; then
-            echo 'Profile metrics are already up to date.'
+            echo 'Profile metrics are already current.'
             exit 0
           fi
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore: refresh profile metrics'
-          git push
+          git commit -m 'chore: refresh profile metrics [skip ci]'
+          git push origin "HEAD:${TARGET_BRANCH}"
