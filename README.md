@@ -62,7 +62,7 @@ I keep programming exercises, contest solutions and learning experiments organiz
 </div>
 
 <div align="center">
-  <img src="https://streak-stats.demolab.com?user=Rafael-lima-devbr&theme=github-dark-blue&hide_border=true" alt="GitHub streak" />
+  <img width="95%" src="https://github-readme-activity-graph.vercel.app/graph?username=Rafael-lima-devbr&theme=github-compact&hide_border=true" alt="GitHub contribution activity graph" />
 </div>
 
 ---
