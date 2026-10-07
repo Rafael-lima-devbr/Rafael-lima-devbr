@@ -48,10 +48,13 @@ I keep programming exercises, contest solutions and study code organized in [`st
 
 ## Tech stack
 
+<p align="center"><code>// tools I use across software, security and robotics</code></p>
+
 <div align="center">
-
-`C` · `C++` · `Python` · `Java` · `JavaScript` · `Git` · `GitHub Actions` · `Docker` · `Linux` · `Arduino` · `Raspberry Pi`
-
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=c,cpp,python,java,js,git,github,linux,docker,arduino,raspberrypi&theme=dark&perline=11">
+    <img src="https://skillicons.dev/icons?i=c,cpp,python,java,js,git,github,linux,docker,arduino,raspberrypi&theme=light&perline=11" alt="C, C++, Python, Java, JavaScript, Git, GitHub, Linux, Docker, Arduino and Raspberry Pi" />
+  </picture>
 </div>
 
 <p align="center"><code>build → test → measure → improve</code></p>
@@ -59,6 +62,7 @@ I keep programming exercises, contest solutions and study code organized in [`st
 ## GitHub activity
 
 <p align="center">
+  <sub><code>status: live · refresh: daily</code></sub><br/>
   <sub>Metrics are refreshed automatically <strong>once per day</strong> from GitHub data and stored as validated SVG files inside this repository.</sub>
 </p>
 
