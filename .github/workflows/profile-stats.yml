@@ -9,12 +9,14 @@ on:
       - main
     paths:
       - '.github/workflows/profile-stats.yml'
+      - '.github/scripts/render_profile.py'
       - 'README.md'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/profile-stats.yml'
+      - '.github/scripts/render_profile.py'
       - 'README.md'
 
 permissions:
@@ -22,98 +24,69 @@ permissions:
 
 concurrency:
   group: profile-metrics-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  generate:
+  render:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
-      - name: Check out repository
+      - name: Check out source branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Generate GitHub overview
-        id: overview
-        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
         with:
-          username: ${{ github.repository_owner }}
-          token: ${{ github.token }}
-          profile: signal-field
+          ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Generate contribution consistency
-        id: consistency
-        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
-        with:
-          username: ${{ github.repository_owner }}
-          token: ${{ github.token }}
-          profile: activity-consistency
-
-      - name: Prepare output directory
-        run: mkdir -p profile
-
-      - name: Generate top languages (light)
-        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=default
-          path: profile/top-langs-light.svg
-          token: ${{ github.token }}
-          fail_on_error: true
-
-      - name: Generate top languages (dark)
-        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
-        with:
-          card: top-langs
-          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark
-          path: profile/top-langs-dark.svg
-          token: ${{ github.token }}
-          fail_on_error: true
-
-      - name: Stage generated cards
+      - name: Render cards from GitHub API
         env:
-          OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
-          CONSISTENCY_DIR: ${{ steps.consistency.outputs.ready-dir }}
+          GH_TOKEN: ${{ github.token }}
+          PROFILE_USER: ${{ github.repository_owner }}
+        run: python3 .github/scripts/render_profile.py
+
+      - name: Validate generated SVGs
         run: |
           set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
 
-          cp "$OVERVIEW_DIR"/signal-field-wide-light.svg profile/
-          cp "$OVERVIEW_DIR"/signal-field-wide-dark.svg profile/
-          cp "$CONSISTENCY_DIR"/activity-consistency-wide-light.svg profile/
-          cp "$CONSISTENCY_DIR"/activity-consistency-wide-dark.svg profile/
+          expected = [
+              'overview-card-light.svg',
+              'overview-card-dark.svg',
+              'streak-card-light.svg',
+              'streak-card-dark.svg',
+              'top-langs-light.svg',
+              'top-langs-dark.svg',
+              'contribution-grid-light.svg',
+              'contribution-grid-dark.svg',
+          ]
 
-          rm -f profile/language-composition-wide-light.svg
-          rm -f profile/language-composition-wide-dark.svg
+          for name in expected:
+              path = Path('profile') / name
+              if not path.is_file() or path.stat().st_size == 0:
+                  raise SystemExit(f'Missing or empty card: {path}')
+              text = path.read_text(encoding='utf-8')
+              if 'NaN' in text or 'undefined' in text:
+                  raise SystemExit(f'Invalid value in {path}')
+              ET.parse(path)
 
-      - name: Validate generated cards
-        run: |
-          set -euo pipefail
-          files=(
-            profile/signal-field-wide-light.svg
-            profile/signal-field-wide-dark.svg
-            profile/activity-consistency-wide-light.svg
-            profile/activity-consistency-wide-dark.svg
-            profile/top-langs-light.svg
-            profile/top-langs-dark.svg
-          )
+          print('All profile SVGs are valid.')
+          PY
 
-          for file in "${files[@]}"; do
-            test -s "$file"
-            grep -q '<svg' "$file"
-          done
-
-      - name: Publish refreshed metrics
-        if: github.event_name != 'pull_request'
+      - name: Publish refreshed cards
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          TARGET_BRANCH: ${{ github.head_ref || github.ref_name }}
         run: |
           set -euo pipefail
           git add -A profile
 
           if git diff --cached --quiet; then
-            echo 'Profile metrics are already up to date.'
+            echo 'Profile metrics are already current.'
             exit 0
           fi
 
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'chore: refresh profile metrics'
-          git push
+          git commit -m 'chore: refresh profile metrics [skip ci]'
+          git push origin "HEAD:${TARGET_BRANCH}"
