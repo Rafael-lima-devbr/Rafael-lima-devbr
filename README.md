@@ -8,57 +8,74 @@ Technical High School student in **Industrial Automation at IFBA**, building pro
 
 <sub>Estudante do Ensino Médio Técnico em <strong>Automação Industrial no IFBA</strong>, com foco em desenvolvimento de software, cibersegurança, robótica e DevSecOps.</sub>
 
+<br/>
+
+<code>// learning by building, testing and improving real projects</code>
+
 </div>
-
-```text
-rafael@github:~$ whoami
-software + security + robotics
-
-rafael@github:~$ focus --current
-phishing-detection | devsecops | ftc-robotics | algorithms
-
-rafael@github:~$ mindset
-build -> test -> measure -> improve
-```
 
 ---
 
-## `~/about`
+## Profile
 
-I like projects where software interacts with something measurable: a security signal, a robot, a pipeline, a sensor or an algorithmic constraint.
+|  |  |
+|---|---|
+| **Education** | Technical High School in Industrial Automation at **IFBA** |
+| **Main areas** | Software development · Cybersecurity · Robotics · DevSecOps |
+| **Currently building** | Preventive phishing detection · FTC robotics software · secure CI/CD projects |
+| **Programming** | C · C++ · Python · Java · JavaScript |
+| **Engineering interests** | Autonomous systems · sensors · control · software security · automation |
 
-- **Software security** — phishing detection, browser security, application security and secure development.
-- **Robotics** — line following, PID/PD control, odometry, sensor integration and autonomous navigation.
-- **DevSecOps** — CI/CD, Docker, automated tests, SAST/DAST, monitoring and secure pipelines.
-- **Programming** — C, C++, Python, Java and JavaScript across academic, robotics and competitive-programming projects.
-- **FTC** — programming with the FTC SDK, Java, Git collaboration, Autonomous and TeleOp at IFBA.
+I am especially interested in projects where software interacts with something that can be **measured, tested or improved** — whether that is a security signal, a robot, a CI/CD pipeline, a sensor or an algorithmic constraint.
 
-## `~/focus`
+## What I work on
 
-**Cybersecurity & Software Security**  
-My main research-oriented project is [`Phishpect`](https://github.com/Rafael-lima-devbr/Phishpect), an experimental browser-extension project focused on preventive phishing detection.
+### Cybersecurity & Software Security
 
-**Robotics & Autonomous Systems**  
-Arduino and Raspberry Pi projects involving line following, control, odometry, sensors and autonomous navigation.
+I study browser security, phishing detection, application security and secure software development. My main research-oriented project is [`Phishpect`](https://github.com/Rafael-lima-devbr/Phishpect), an experimental browser extension focused on preventive phishing detection.
 
-**DevSecOps**  
-CI/CD, containerization, automated testing, security analysis and observability in [`devsecops-task-manager-flask`](https://github.com/Rafael-lima-devbr/devsecops-task-manager-flask).
+### Robotics & Autonomous Systems
 
-**Algorithms & Programming**  
-Programming exercises, contest solutions and study code organized in [`study-code`](https://github.com/Rafael-lima-devbr/study-code).
+I work with Arduino and Raspberry Pi projects involving line following, PID/PD control, odometry, sensor integration and autonomous navigation. I also work with **FTC programming at IFBA**, using Java, the FTC SDK, Git collaboration, Autonomous and TeleOp development.
 
-## `~/stack`
+### DevSecOps
+
+I explore CI/CD, containerization, automated testing, SAST/DAST, monitoring and secure pipelines. One of my main projects in this area is [`devsecops-task-manager-flask`](https://github.com/Rafael-lima-devbr/devsecops-task-manager-flask).
+
+### Algorithms & Programming
+
+I keep programming exercises, contest solutions and study code organized in [`study-code`](https://github.com/Rafael-lima-devbr/study-code), mainly using C, C++ and Python.
+
+## Tech stack
+
+<p align="center"><code>// tools I use across software, security and robotics</code></p>
 
 <div align="center">
-
-`C` · `C++` · `Python` · `Java` · `JavaScript` · `Git` · `GitHub Actions` · `Docker` · `Linux` · `Arduino` · `Raspberry Pi`
-
+  <img src="https://skillicons.dev/icons?i=c&theme=dark" height="48" alt="C" />
+  <img src="https://skillicons.dev/icons?i=cpp&theme=dark" height="48" alt="C++" />
+  <img src="https://skillicons.dev/icons?i=python&theme=dark" height="48" alt="Python" />
+  <img src="https://skillicons.dev/icons?i=java&theme=dark" height="48" alt="Java" />
+  <img src="https://skillicons.dev/icons?i=js&theme=dark" height="48" alt="JavaScript" />
+  <img src="https://skillicons.dev/icons?i=git&theme=dark" height="48" alt="Git" />
+  <img src="https://skillicons.dev/icons?i=github&theme=dark" height="48" alt="GitHub" />
+  <img src="https://skillicons.dev/icons?i=githubactions&theme=dark" height="48" alt="GitHub Actions" />
+  <img src="https://skillicons.dev/icons?i=docker&theme=dark" height="48" alt="Docker" />
+  <img src="https://skillicons.dev/icons?i=linux&theme=dark" height="48" alt="Linux" />
+  <img src="https://skillicons.dev/icons?i=arduino&theme=dark" height="48" alt="Arduino" />
+  <img src="https://skillicons.dev/icons?i=raspberrypi&theme=dark" height="48" alt="Raspberry Pi" />
+  <img src="https://skillicons.dev/icons?i=vscode&theme=dark" height="48" alt="Visual Studio Code" />
+  <img src="https://skillicons.dev/icons?i=androidstudio&theme=dark" height="48" alt="Android Studio" />
 </div>
 
-## `~/github --live`
+<p align="center"><sub>C · C++ · Python · Java · JavaScript · Git · GitHub · GitHub Actions · Docker · Linux · Arduino · Raspberry Pi · VS Code · Android Studio</sub></p>
+
+<p align="center"><code>build → test → measure → improve</code></p>
+
+## GitHub activity
 
 <p align="center">
-  <sub>These cards are rendered directly from GitHub data every <strong>6 hours</strong> and stored in this repository. The date of the latest dataset appears inside the cards.</sub>
+  <sub><code>status: live · refresh: daily</code></sub><br/>
+  <sub>Metrics are refreshed automatically <strong>once per day</strong> from GitHub data and stored as validated SVG files inside this repository.</sub>
 </p>
 
 <div align="center">
@@ -85,7 +102,7 @@ Programming exercises, contest solutions and study code organized in [`study-cod
 <p align="center"><sub>Jupyter Notebook is intentionally excluded from the language breakdown so notebook metadata does not dominate the source-code profile.</sub></p>
 
 <details>
-<summary><strong>▸ Contribution map — past year</strong></summary>
+<summary><strong>Contribution map — past year</strong></summary>
 
 <br/>
 
@@ -98,7 +115,7 @@ Programming exercises, contest solutions and study code organized in [`study-cod
 
 </details>
 
-## `~/contact`
+## Connect with me
 
 <div align="center">
 
