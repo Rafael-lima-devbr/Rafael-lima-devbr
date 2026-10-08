@@ -1,0 +1,119 @@
+name: Refresh profile metrics
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 6 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/profile-stats.yml'
+      - 'README.md'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/profile-stats.yml'
+      - 'README.md'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-metrics-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Generate GitHub overview
+        id: overview
+        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
+        with:
+          username: ${{ github.repository_owner }}
+          token: ${{ github.token }}
+          profile: signal-field
+
+      - name: Generate contribution consistency
+        id: consistency
+        uses: shinpr/github-profile-stats@49b5f7091182a45f3ef93923505b660c6da5f835 # v0.2.0
+        with:
+          username: ${{ github.repository_owner }}
+          token: ${{ github.token }}
+          profile: activity-consistency
+
+      - name: Prepare output directory
+        run: mkdir -p profile
+
+      - name: Generate top languages (light)
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
+        with:
+          card: top-langs
+          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=default
+          path: profile/top-langs-light.svg
+          token: ${{ github.token }}
+          fail_on_error: true
+
+      - name: Generate top languages (dark)
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
+        with:
+          card: top-langs
+          options: username=${{ github.repository_owner }}&layout=compact&langs_count=6&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark
+          path: profile/top-langs-dark.svg
+          token: ${{ github.token }}
+          fail_on_error: true
+
+      - name: Stage generated cards
+        env:
+          OVERVIEW_DIR: ${{ steps.overview.outputs.ready-dir }}
+          CONSISTENCY_DIR: ${{ steps.consistency.outputs.ready-dir }}
+        run: |
+          set -euo pipefail
+
+          cp "$OVERVIEW_DIR"/signal-field-wide-light.svg profile/
+          cp "$OVERVIEW_DIR"/signal-field-wide-dark.svg profile/
+          cp "$CONSISTENCY_DIR"/activity-consistency-wide-light.svg profile/
+          cp "$CONSISTENCY_DIR"/activity-consistency-wide-dark.svg profile/
+
+          rm -f profile/language-composition-wide-light.svg
+          rm -f profile/language-composition-wide-dark.svg
+
+      - name: Validate generated cards
+        run: |
+          set -euo pipefail
+          files=(
+            profile/signal-field-wide-light.svg
+            profile/signal-field-wide-dark.svg
+            profile/activity-consistency-wide-light.svg
+            profile/activity-consistency-wide-dark.svg
+            profile/top-langs-light.svg
+            profile/top-langs-dark.svg
+          )
+
+          for file in "${files[@]}"; do
+            test -s "$file"
+            grep -q '<svg' "$file"
+          done
+
+      - name: Publish refreshed metrics
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+          git add -A profile
+
+          if git diff --cached --quiet; then
+            echo 'Profile metrics are already up to date.'
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: refresh profile metrics'
+          git push

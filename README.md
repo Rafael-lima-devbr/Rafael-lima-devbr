@@ -61,10 +61,6 @@ I keep programming exercises, contest solutions and learning experiments organiz
   <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Rafael-lima-devbr&layout=compact&hide=Jupyter%20Notebook&hide_border=true&theme=github_dark" alt="Most used languages" />
 </div>
 
-<div align="center">
-  <img src="https://streak-stats.demolab.com?user=Rafael-lima-devbr&theme=github-dark-blue&hide_border=true" alt="GitHub streak" />
-</div>
-
 ---
 
 <div align="center">
